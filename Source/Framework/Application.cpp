@@ -29,7 +29,7 @@ Application::Application()
 	renderer = new Renderer(applicationName, windowWidth, windowHeight);
 	editor = new Editor(this);
 
-	LOG("Successfully initialized - 'Insert Application Name'");
+	LOG("Successfully initialized - Nebula");
 }
 
 void Application::Run()

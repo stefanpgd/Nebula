@@ -8,7 +8,6 @@
 class Renderer;
 class Editor;
 
-// When using the template, rename 'Application' to whatever the current project is called 
 class Application
 {
 public:
@@ -26,7 +25,7 @@ private:
 	static LRESULT CALLBACK WindowsCallback(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
-	std::wstring applicationName = L"Flux";
+	std::wstring applicationName = L"Nebula";
 	bool runApplication = true;
 
 	unsigned int windowWidth = 1080;

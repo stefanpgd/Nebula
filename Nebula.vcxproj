@@ -86,8 +86,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Dependencies\tinyglTF\tiny_gltf.cpp" />
-    <ClCompile Include="Source\Graphics\Model.cpp" />
     <ClCompile Include="Source\Framework\Input.cpp" />
     <ClCompile Include="Source\Framework\Editor.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui.cpp" />
@@ -107,7 +105,6 @@
     <ClCompile Include="Source\Graphics\DXDevice.cpp" />
     <ClCompile Include="Source\Graphics\DXPipeline.cpp" />
     <ClCompile Include="Source\Graphics\DXRootSignature.cpp" />
-    <ClCompile Include="Source\Graphics\Mesh.cpp" />
     <ClCompile Include="Source\Graphics\Texture.cpp" />
     <ClCompile Include="Source\Graphics\Transform.cpp" />
     <ClCompile Include="Source\Graphics\Window.cpp" />
@@ -139,7 +136,6 @@
     <ClInclude Include="Headers\Graphics\DXPipeline.h" />
     <ClInclude Include="Headers\Graphics\DXRootSignature.h" />
     <ClInclude Include="Headers\Graphics\DXUtilities.h" />
-    <ClInclude Include="Headers\Graphics\Mesh.h" />
     <ClInclude Include="Headers\Graphics\Texture.h" />
     <ClInclude Include="Headers\Graphics\Transform.h" />
     <ClInclude Include="Headers\Graphics\Window.h" />
@@ -148,7 +144,6 @@
     <ClInclude Include="Headers\Utilities\Logger.h" />
     <ClInclude Include="Headers\Graphics\RenderStage.h" />
     <ClInclude Include="Headers\Framework\Input.h" />
-    <ClInclude Include="Headers\Graphics\Model.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="Dependencies\Microsoft\d3dcompiler_47.dll">
