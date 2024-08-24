@@ -90,6 +90,9 @@
     <ClCompile Include="Source\Graphics\DXUploadBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\RenderStages\RayMarchStage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Framework\Application.h">
@@ -185,6 +188,9 @@
     <ClInclude Include="Headers\Graphics\DXUploadBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\Graphics\RenderStages\RayMarchStage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="Dependencies\Microsoft\d3dcompiler_47.dll" />
@@ -192,5 +198,6 @@
   <ItemGroup>
     <FxCompile Include="Source\Shaders\screen.vertex.hlsl" />
     <FxCompile Include="Source\Shaders\screen.pixel.hlsl" />
+    <FxCompile Include="Source\Shaders\screenUV.compute.hlsl" />
   </ItemGroup>
 </Project>

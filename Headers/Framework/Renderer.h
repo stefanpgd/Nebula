@@ -5,6 +5,8 @@
 #include <wrl.h>
 using namespace Microsoft::WRL;
 
+class RayMarchStage;
+
 class Renderer
 {
 public:
@@ -15,4 +17,7 @@ public:
 
 private:
 	void InitializeImGui();
+
+private:
+	RayMarchStage* rayMarchStage;
 };

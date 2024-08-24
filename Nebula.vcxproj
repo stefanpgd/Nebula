@@ -86,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Graphics\RenderStages\RayMarchStage.cpp" />
     <ClCompile Include="Source\Framework\Input.cpp" />
     <ClCompile Include="Source\Framework\Editor.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="Headers\Utilities\Logger.h" />
     <ClInclude Include="Headers\Graphics\RenderStage.h" />
     <ClInclude Include="Headers\Framework\Input.h" />
+    <ClInclude Include="Headers\Graphics\RenderStages\RayMarchStage.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="Dependencies\Microsoft\d3dcompiler_47.dll">
@@ -162,6 +164,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Source\Shaders\screenUV.compute.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

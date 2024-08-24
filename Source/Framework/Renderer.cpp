@@ -9,6 +9,7 @@
 // Renderer Components //
 #include "Graphics/Window.h"
 #include "Graphics/Texture.h"
+#include "Graphics/RenderStages/RayMarchStage.h"
 
 #include <cassert>
 #include <imgui.h>
@@ -48,6 +49,8 @@ Renderer::Renderer(const std::wstring& applicationName, unsigned int windowWidth
 	window = new Window(applicationName, windowWidth, windowHeight);
 
 	InitializeImGui();
+
+	rayMarchStage = new RayMarchStage();
 }
 
 void Renderer::Render()
@@ -68,7 +71,7 @@ void Renderer::Render()
 	TransitionResource(renderTargetBuffer.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	BindAndClearRenderTarget(window, &rtvHandle, &dsvHandle);
 
-	// Insert new rendering code here //
+	rayMarchStage->RecordStage(commandList);
 
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList.Get());
 	TransitionResource(renderTargetBuffer.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
