@@ -1,9 +1,18 @@
 struct Settings
 {
     float time;
+    int geometryCount;
 };
 ConstantBuffer<Settings> settings : register(b0);
 RWTexture2D<float4> backBuffer : register(u0);
+
+struct RMGeometry
+{
+    uint type;
+    float3 position;
+    float radius;
+};
+RWStructuredBuffer<RMGeometry> geometry : register(u1);
 
 float sdSphere(float3 p, float r)
 {
@@ -16,26 +25,32 @@ float sdBox(float3 p, float3 b)
     return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0);
 }
 
-float smin(float a, float b, float k)
-{
-    float h = max(k - abs(a - b), 0.0) / k;
-    return min(a, b) - h * h * h * k * (1.0 / 6.0);
-}
-
 float DistanceInScene(float3 pointAlongRay)
 {
-    float3 s1P = float3(cos(settings.time) * 2.0, 0.0f, 0.0);
-    float3 s2P = float3(0.0f, 0.0f, 0.0f);
+    float worldDistance = 100000.0f;
     
-    float3 p1 = pointAlongRay - s1P;
-    float3 p2 = pointAlongRay - s2P;
+    for(int i = 0; i < settings.geometryCount; i++)
+    {
+        float3 gPos = geometry[i].position;
+        float3 pos = pointAlongRay - gPos;
+        float r = geometry[i].radius;
+        float gDistance = 100000.0f;
+        
+        switch(geometry[i].type)
+        {
+            case 0:
+                gDistance = sdSphere(pos, r);
+                break;
+            
+            case 1:
+                gDistance = sdBox(pos, r);
+                break;
+        }
+        
+        worldDistance = min(worldDistance, gDistance);
+    }
     
-    float d1 = sdSphere(p1, 0.75);
-    float d2 = sdBox(p2, 0.5);
-    
-    float sceneDistance = smin(d2, d1, 1.25);
-    
-    return sceneDistance;
+    return worldDistance;
 }
 
 [numthreads(8, 8, 1)]

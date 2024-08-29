@@ -1,6 +1,7 @@
 #include "Graphics/RenderStages/RayMarchStage.h"
 #include "Graphics/DXRootSignature.h"
 #include "Graphics/DXComputePipeline.h"
+#include "Graphics/DXStructuredBuffer.h"
 #include "Graphics/DXAccess.h"
 #include "Graphics/DXUtilities.h"
 #include "Graphics/Texture.h"
@@ -14,7 +15,7 @@ RayMarchStage::RayMarchStage()
 
 void RayMarchStage::Update(float deltaTime)
 {
-	elapsedTime += deltaTime;
+	settings.ElaspedTime += deltaTime;
 }
 
 void RayMarchStage::RecordStage(ComPtr<ID3D12GraphicsCommandList4> commandList)
@@ -25,7 +26,8 @@ void RayMarchStage::RecordStage(ComPtr<ID3D12GraphicsCommandList4> commandList)
 
 	// 2. Bind resources needed for our pipeline //
 	commandList->SetComputeRootDescriptorTable(0, backBuffer->GetUAV());
-	commandList->SetComputeRoot32BitConstants(1, 1, &elapsedTime, 0);
+	commandList->SetComputeRootDescriptorTable(1, geometryBuffer->GetUAV());
+	commandList->SetComputeRoot32BitConstants(2, 2, &settings, 0);
 
 	// 3. Dispatch our compute shader //
 	unsigned int screenWidth = DXAccess::GetWindow()->GetWindowWidth();
@@ -49,6 +51,20 @@ void RayMarchStage::InitializeResources()
 	int height = DXAccess::GetWindow()->GetWindowHeight();
 
 	backBuffer = new Texture(width, height, DXGI_FORMAT_R8G8B8A8_UNORM);
+
+	RayMarchGeometry sphere;
+	sphere.Type = RayMarchType::Sphere;
+	sphere.Position = glm::vec3(0.0f, 0.75f, 0.0f);
+
+	RayMarchGeometry cube;
+	cube.Type = RayMarchType::Cube;
+	cube.Position = glm::vec3(0.0f, -0.75f, 0.0f);
+
+	geometry.push_back(sphere);
+	geometry.push_back(cube);
+	geometryBuffer = new DXStructuredBuffer(geometry.data(), geometry.size(), sizeof(RayMarchGeometry));
+
+	settings.GeometryCount = geometry.size();
 }
 
 void RayMarchStage::InitializePipeline()
@@ -56,9 +72,13 @@ void RayMarchStage::InitializePipeline()
 	CD3DX12_DESCRIPTOR_RANGE1 bufferRange[1];
 	bufferRange[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 0);
 
-	CD3DX12_ROOT_PARAMETER1 rootParameters[2];
+	CD3DX12_DESCRIPTOR_RANGE1 geometryRange[1];
+	geometryRange[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 1);
+
+	CD3DX12_ROOT_PARAMETER1 rootParameters[3];
 	rootParameters[0].InitAsDescriptorTable(1, bufferRange);
-	rootParameters[1].InitAsConstants(1, 0);
+	rootParameters[1].InitAsDescriptorTable(1, geometryRange);
+	rootParameters[2].InitAsConstants(2, 0);
 
 	rootSignature = new DXRootSignature(rootParameters, _countof(rootParameters));
 	computePipeline = new DXComputePipeline(rootSignature, "Source/Shaders/raymarch.compute.hlsl");
