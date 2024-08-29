@@ -199,5 +199,6 @@
     <FxCompile Include="Source\Shaders\screen.vertex.hlsl" />
     <FxCompile Include="Source\Shaders\screen.pixel.hlsl" />
     <FxCompile Include="Source\Shaders\screenUV.compute.hlsl" />
+    <FxCompile Include="Source\Shaders\raymarch.compute.hlsl" />
   </ItemGroup>
 </Project>

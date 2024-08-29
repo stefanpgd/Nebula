@@ -12,6 +12,11 @@ RayMarchStage::RayMarchStage()
 	InitializePipeline();
 }
 
+void RayMarchStage::Update(float deltaTime)
+{
+	elapsedTime += deltaTime;
+}
+
 void RayMarchStage::RecordStage(ComPtr<ID3D12GraphicsCommandList4> commandList)
 {
 	// 1. Bind our root signature & pipeine //
@@ -20,6 +25,7 @@ void RayMarchStage::RecordStage(ComPtr<ID3D12GraphicsCommandList4> commandList)
 
 	// 2. Bind resources needed for our pipeline //
 	commandList->SetComputeRootDescriptorTable(0, backBuffer->GetUAV());
+	commandList->SetComputeRoot32BitConstants(1, 1, &elapsedTime, 0);
 
 	// 3. Dispatch our compute shader //
 	unsigned int screenWidth = DXAccess::GetWindow()->GetWindowWidth();
@@ -48,11 +54,12 @@ void RayMarchStage::InitializeResources()
 void RayMarchStage::InitializePipeline()
 {
 	CD3DX12_DESCRIPTOR_RANGE1 bufferRange[1];
-	bufferRange->Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 0);
+	bufferRange[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 0);
 
-	CD3DX12_ROOT_PARAMETER1 rootParameters[1];
-	rootParameters->InitAsDescriptorTable(1, bufferRange);
+	CD3DX12_ROOT_PARAMETER1 rootParameters[2];
+	rootParameters[0].InitAsDescriptorTable(1, bufferRange);
+	rootParameters[1].InitAsConstants(1, 0);
 
 	rootSignature = new DXRootSignature(rootParameters, _countof(rootParameters));
-	computePipeline = new DXComputePipeline(rootSignature, "Source/Shaders/screenUV.compute.hlsl");
+	computePipeline = new DXComputePipeline(rootSignature, "Source/Shaders/raymarch.compute.hlsl");
 }

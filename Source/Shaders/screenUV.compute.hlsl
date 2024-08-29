@@ -11,7 +11,7 @@ void main(uint3 dispatchThreadID : SV_DispatchThreadID )
     {
         return;
     }
-
+    
     float2 uv = dispatchThreadID.xy / float2(width, height);
     backBuffer[dispatchThreadID.xy] = float4(uv, 0.0f, 1.0f);
 }

@@ -8,6 +8,7 @@ class RayMarchStage : public RenderStage
 public:
 	RayMarchStage();
 
+	void Update(float deltaTime);
 	void RecordStage(ComPtr<ID3D12GraphicsCommandList4> commandList) override;
 
 private:
@@ -15,5 +16,7 @@ private:
 	void InitializePipeline();
 
 private:
+	float elapsedTime;
+
 	Texture* backBuffer;
 };

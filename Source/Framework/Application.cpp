@@ -76,8 +76,8 @@ void Application::Start()
 void Application::Update(float deltaTime)
 {
 	Input::Update();
-
 	editor->Update(deltaTime);
+	renderer->Update(deltaTime);
 
 	if(Input::GetKeyDown(KeyCode::Escape))
 	{

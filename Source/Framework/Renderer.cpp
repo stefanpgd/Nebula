@@ -53,6 +53,11 @@ Renderer::Renderer(const std::wstring& applicationName, unsigned int windowWidth
 	rayMarchStage = new RayMarchStage();
 }
 
+void Renderer::Update(float deltaTime)
+{
+	rayMarchStage->Update(deltaTime);
+}
+
 void Renderer::Render()
 {
 	unsigned int backBufferIndex = window->GetCurrentBackBufferIndex();

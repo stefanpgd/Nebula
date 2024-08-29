@@ -5,6 +5,10 @@
 
 #include <string>
 
+// TODO: Consider adding "Time" to the framework
+// a class that has a way to retrieve deltaTime AND program run time. This way we don't need
+// to pass deltaTime to everything
+
 class Renderer;
 class Editor;
 

@@ -12,6 +12,7 @@ class Renderer
 public:
 	Renderer(const std::wstring& applicationName, unsigned int windowWidth, unsigned int windowHeight);
 	
+	void Update(float deltaTime);
 	void Render();
 	void Resize();
 
