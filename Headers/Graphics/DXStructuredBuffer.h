@@ -7,7 +7,7 @@ class DXStructuredBuffer
 public:
 	DXStructuredBuffer(const void* data, unsigned int numberOfElements, unsigned int elementSize);
 
-	void UpdateData(const void* data);
+	void UpdateData(const void* data, unsigned int numberOfElements = 0, unsigned int elementSize = 0);
 
 	ComPtr<ID3D12Resource> GetResource();
 	CD3DX12_GPU_DESCRIPTOR_HANDLE GetSRV();

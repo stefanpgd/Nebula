@@ -8,9 +8,10 @@ RWTexture2D<float4> backBuffer : register(u0);
 
 struct RMGeometry
 {
-    uint type;
+    int type;
     float3 position;
     float radius;
+    float3 color;
 };
 RWStructuredBuffer<RMGeometry> geometry : register(u1);
 
@@ -25,9 +26,16 @@ float sdBox(float3 p, float3 b)
     return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0);
 }
 
-float DistanceInScene(float3 pointAlongRay)
+float opSmoothUnion(float d1, float d2, float k)
+{
+    float h = clamp(0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0);
+    return lerp(d2, d1, h) - k * h * (1.0 - h);
+}
+
+float4 DistanceInScene(float3 pointAlongRay)
 {
     float worldDistance = 100000.0f;
+    float3 colorGeometry = float3(0.0, 0.0, 0.0);
     
     for(int i = 0; i < settings.geometryCount; i++)
     {
@@ -47,10 +55,14 @@ float DistanceInScene(float3 pointAlongRay)
                 break;
         }
         
-        worldDistance = min(worldDistance, gDistance);
+        if(gDistance < worldDistance)
+        {
+            worldDistance = min(worldDistance, gDistance);
+            colorGeometry = geometry[i].color;
+        }
     }
     
-    return worldDistance;
+    return float4(colorGeometry, worldDistance);
 }
 
 [numthreads(8, 8, 1)]
@@ -76,7 +88,7 @@ void main(uint3 dispatchThreadID : SV_DispatchThreadID)
     uv.x *= float(width) / float(height); // Aspect Ratio
     
     float3 ro = float3(0.0, 0.0, -3.0f);
-    float3 rd = normalize(float3(uv, 1.0));
+    float3 rd = normalize(float3(uv, 1.25));
     float t = 0.0f;
     
     float3 color = float3(0.0, 0.0, 0.0);
@@ -84,16 +96,24 @@ void main(uint3 dispatchThreadID : SV_DispatchThreadID)
     for(int i = 0; i < maxSteps; i++)
     {
         float3 p = ro + rd * t;
-        float d = DistanceInScene(p);
-        t += d;
+        float4 scene = DistanceInScene(p);
+        t += scene.a;
         
-        color = float3(i, i, i) / float(maxSteps);
-        
-        if(d < epsilon || d > maxDistance)
+        if(scene.a < epsilon)
         {
+            // Hit surface //
+            color = scene.rgb;
+            break;
+        }
+        
+        if(scene.a > maxDistance)
+        {
+            // Hit nothing or reached end //
+            float3 skycolor = lerp(float3(0.8, 0.2, 0.8), float3(0.2, 0.4, 0.95), rd.y);
+            color = skycolor * float3(i, i, i) / float(maxSteps);
             break;
         }
     }
     
     backBuffer[dispatchThreadID.xy] = float4(color, 1.0f);
-}
+    }

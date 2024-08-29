@@ -13,8 +13,17 @@ DXStructuredBuffer::DXStructuredBuffer(const void* data, unsigned int numberOfEl
 	UpdateData(data);
 }
 
-void DXStructuredBuffer::UpdateData(const void* data)
+void DXStructuredBuffer::UpdateData(const void* data, unsigned int numElements, unsigned int entrySize)
 {
+	if(numElements != 0 || entrySize != 0)
+	{
+		// If it enters here, it means that the buffer's size has been updated
+		this->bufferSize = numElements * entrySize;
+
+		this->numberOfElements = numElements;
+		this->elementSize = entrySize;
+	}
+
 	DXDescriptorHeap* heap = DXAccess::GetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	D3D12_RESOURCE_DESC description = CD3DX12_RESOURCE_DESC::Buffer(bufferSize, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, 0);

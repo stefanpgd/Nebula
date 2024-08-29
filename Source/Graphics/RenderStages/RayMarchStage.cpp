@@ -7,6 +7,8 @@
 #include "Graphics/Texture.h"
 #include "Graphics/Window.h"
 
+#include <imgui.h>
+
 RayMarchStage::RayMarchStage()
 {
 	InitializeResources();
@@ -16,6 +18,28 @@ RayMarchStage::RayMarchStage()
 void RayMarchStage::Update(float deltaTime)
 {
 	settings.ElaspedTime += deltaTime;
+
+	bool hasUpdated = false;
+
+	ImGui::Begin("Geometry Editor");
+	for(int i = 0; i < geometry.size(); i++)
+	{
+		ImGui::PushID(i);
+
+		if(ImGui::SliderInt("Geometry Type", &geometry[i].Type, 0, 1)) { hasUpdated = true; }
+		if(ImGui::DragFloat3("Position", &geometry[i].Position.x, 0.01f)) { hasUpdated = true; }
+		if(ImGui::DragFloat("Radius", &geometry[i].Radius, 0.01f, 0.0f, 1000.0f)) { hasUpdated = true; }
+		if(ImGui::ColorEdit3("Color", &geometry[i].Color.x)) { hasUpdated = true; }
+
+		ImGui::PopID();
+	}
+	ImGui::End();
+
+	if(hasUpdated)
+	{
+		DXAccess::GetCommands(D3D12_COMMAND_LIST_TYPE_DIRECT)->Flush();
+		geometryBuffer->UpdateData(geometry.data(), geometry.size(), sizeof(RayMarchGeometry));
+	}
 }
 
 void RayMarchStage::RecordStage(ComPtr<ID3D12GraphicsCommandList4> commandList)

@@ -13,9 +13,10 @@ enum RayMarchType
 
 struct RayMarchGeometry
 {
-	unsigned int Type;
+	int Type;
 	glm::vec3 Position;
-	float radius = 1.0f;
+	float Radius = 1.0f;
+	glm::vec3 Color;
 };
 
 struct RayMarchStageSettings
