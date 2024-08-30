@@ -200,5 +200,6 @@
     <FxCompile Include="Source\Shaders\screen.pixel.hlsl" />
     <FxCompile Include="Source\Shaders\screenUV.compute.hlsl" />
     <FxCompile Include="Source\Shaders\raymarch.compute.hlsl" />
+    <FxCompile Include="Source\Shaders\rmSceneDepth.compute.hlsl" />
   </ItemGroup>
 </Project>

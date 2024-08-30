@@ -105,5 +105,5 @@ void RayMarchStage::InitializePipeline()
 	rootParameters[2].InitAsConstants(2, 0);
 
 	rootSignature = new DXRootSignature(rootParameters, _countof(rootParameters));
-	computePipeline = new DXComputePipeline(rootSignature, "Source/Shaders/raymarch.compute.hlsl");
+	computePipeline = new DXComputePipeline(rootSignature, "Source/Shaders/rmSceneDepth.compute.hlsl");
 }
